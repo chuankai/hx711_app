@@ -53,6 +53,7 @@ class WeightLogger
 			puts 'File open failed'
 		end
 		if (@state == LoggerState::DISABLED)
+			puts 'about to create the thread'
 			Thread.new do
 				@state = LoggerState::ENABLED_RUNNING
 				loop do
@@ -63,8 +64,9 @@ class WeightLogger
 					end
 
 					if name != Date.today.to_s + '.txt'
+						puts 'A new day has begun'
 						@f.close
-						send_log(name + '.txt') if @mail_notification
+						#send_log(name + '.txt') if @mail_notification
 						name = Date.today.to_s
 						begin
 						@f = File.open('public/' + name + '.txt', 'a')
@@ -121,6 +123,6 @@ class WeightLogger
 	end
 
 	def flush_log
-		@f.flush
+		@f.flush unless @f.closed?
 	end
 end
