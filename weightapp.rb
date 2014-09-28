@@ -8,3 +8,7 @@ end
 get '/calibration' do
 	erb :calibration
 end
+
+get '/calibration/:name' do |gram|
+	gram
+end

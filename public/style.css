@@ -6,3 +6,9 @@ body {
 	height: 320px;
 	background: Turquoise url("cats.png") no-repeat center center;
 }
+
+IMG.center_button {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
