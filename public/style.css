@@ -6,3 +6,7 @@ body {
 	height: 320px;
 	background: Turquoise url("cats.png") no-repeat center center;
 }
+
+.center_button {
+	align-items: center;
+}
