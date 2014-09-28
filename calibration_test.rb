@@ -22,7 +22,7 @@ c.clear_calibration_data
 puts '==== calibration data cleared ===='
 
 1.upto(5) do |i|
-	c.add_value_raw((5 - i) * 100, (5 - i) * 10)
+	c.add_value_raw?((5 - i) * 100, (5 - i) * 10)
 end
 
 puts '==== calibration data added ===='
