@@ -17,6 +17,13 @@ body {
 	width: 200px;
 }
 
+#body-text {
+	text-align: center;
+	font-size: 300%;
+	font-style: italic;
+	color: #FFFFCC;
+}
+
 IMG.center {
 	display: block;
 	margin-left: auto;
