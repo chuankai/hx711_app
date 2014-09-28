@@ -36,7 +36,7 @@ class Calibration
 		@calibration_points.clear
 	end
 
-	def add_value_raw(val, raw)
+	def add_value_raw?(val, raw)
 		if (@calibrated == false)
 			p = CalibratedPoint.new(val, raw)
 			@calibration_points << p
