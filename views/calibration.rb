@@ -1,4 +1,5 @@
 require 'singleton'
+require 'yaml'
 
 class CalibratedPoint
 	attr_accessor :val, :raw
@@ -18,16 +19,21 @@ class Calibration
 	end
 
 	def load_calibration_data
-		# load calibration data
-		@calibrated = true
+		begin
+			f = File.open("calibration.yml", "r")
+			@calibration_points = YAML.load(f.read)
+			f.close
+			@calibrated = true
+			true
+		rescue Exception => e
+		puts e
+		false
+		end
 	end
 
 	def clear_calibration_data
 		@calibrated = false
 		@calibration_points.clear
-	end
-
-	def save_calibration_data
 	end
 
 	def add_value_raw(val, raw)
@@ -38,6 +44,9 @@ class Calibration
 				@calibration_points.sort! do |a, b|
 					a.raw <=> b.raw
 				end
+				File.open("calibration.yml", "w") do |f|
+					f.puts @calibration_points.to_yaml
+				end
 				@calibrated = true
 			end
 			return true
@@ -46,6 +55,8 @@ class Calibration
 	end
 
 	def value_from_raw(raw)
+		return unless @calibrated
+
 		p_high = @calibration_points.bsearch { |x| x.raw >= raw }
 		if (p_high == nil)
 			'Out of scale'
