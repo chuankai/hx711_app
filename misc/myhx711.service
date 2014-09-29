@@ -1,0 +1,10 @@
+[Unit]
+Description=Load hx711 driver
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/insmod /root/temp/hx711.ko
+
+[Install]
+WantedBy=multi-user.target

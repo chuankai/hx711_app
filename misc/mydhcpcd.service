@@ -1,0 +1,12 @@
+[Unit]
+Description=DHCP client on wlan0  
+Requires=network.target mywlan.service
+After=network.target mywlan.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/dhcpcd wlan0
+
+[Install]
+WantedBy=multi-user.target
