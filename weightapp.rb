@@ -3,17 +3,20 @@ require 'erubis'
 require './calibration'
 
 calib = Calibration.instance
+$f = nil
 
 begin
-	f = File.open("/sys/bus/platform/drivers/hx711/raw", "r")
+	$f = File.open("/sys/bus/platform/drivers/hx711/raw", "r")
 rescue Exception => e
 	puts 'Cannot opnen hx711/raw'
 	puts e
 end
 
 def read_raw
-	f.read
+	$f.read
 end
+
+set :bind, '0.0.0.0'
 
 get '/' do 
 	val = calib.value_from_raw(read_raw)
