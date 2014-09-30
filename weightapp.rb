@@ -1,6 +1,8 @@
+#!/usr/bin/ruby
+
 require 'sinatra'
 require 'erubis'
-require './calibration'
+require_relative 'calibration'
 
 calib = Calibration.instance
 $f = nil
