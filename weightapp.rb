@@ -1,6 +1,8 @@
+#!/usr/bin/ruby
+
 require 'sinatra'
 require 'erubis'
-require './calibration'
+require_relative 'calibration'
 
 calib = Calibration.instance
 $raw_file = nil
@@ -15,6 +17,8 @@ end
 def read_raw
 	$raw_file.read
 end
+
+set :bind, '0.0.0.0'
 
 get '/' do 
 	val = calib.value_from_raw(read_raw)
