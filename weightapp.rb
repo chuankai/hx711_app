@@ -4,8 +4,6 @@ require 'sinatra'
 require 'erubis'
 require_relative 'calibration'
 
-
-
 configure do
 	@calib = Calibration.instance
 end
