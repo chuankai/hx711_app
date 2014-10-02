@@ -4,25 +4,23 @@ require 'sinatra'
 require 'erubis'
 require_relative 'calibration'
 
-calib = Calibration.instance
-$f = nil
 
-begin
-	$f = File.open("/sys/bus/platform/drivers/hx711/raw", "r")
-rescue Exception => e
-	puts 'Cannot opnen hx711/raw'
-	puts e
+
+configure do
+	@calib = Calibration.instance
 end
 
-def read_raw
-	$f.read
+def get_raw
+	IO.read("/sys/bus/platform/drivers/hx711/raw")
+end
+
+def read_calibrated_value
 end
 
 set :bind, '0.0.0.0'
 
 get '/' do 
-	val = calib.value_from_raw(read_raw)
-	erb :index, :locals => {:gram => val}
+	erb :index, :locals => {:gram => get_raw}
 end
 
 get '/calibration' do
