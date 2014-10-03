@@ -29,7 +29,7 @@ get '/calibration/:name' do |gram|
 	if (gram == '0')
 		calib.clear_calibration_data
 	end
-	if calib.add_value_raw?(gram.to_i, read_raw.to_i)
+	if (@calib.add_value_raw?(gram.to_i, get_raw.to_i))
 		erb :calibration_done
 	else
 		erb :calibration
