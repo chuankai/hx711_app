@@ -10,7 +10,7 @@ class WeightLogger
 
 	def initialize
 		Dir.mkdir('log') unless Dir.exists?('log')
-		@enabled? = false
+		@enabled = false
 	end
 
 	def config(frequency, duration, enable_mail_notification, mail_address) 
@@ -21,13 +21,15 @@ class WeightLogger
 	end
 
 	def start
-		if (!@enabled?)
+		if (!@enabled)
 			EM.run do
 				@timer_stopped = false
 				EM.add_periodic_timer(@freq) do
 					if @timer_stopped
 						EM.stop_event_loop
+						@enabled = false
 					end
+
 					name = Date.today.to_s + '.txt'
 					begin
 					File.open(name, "a") do |f|
@@ -39,8 +41,8 @@ class WeightLogger
 					end
 				end
 			end
+			@enabled = true
 		end
-		@enabled? = true
 	end
 
 	def stop
