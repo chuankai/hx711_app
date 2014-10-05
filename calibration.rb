@@ -38,6 +38,7 @@ class Calibration
 
 	def add_value_raw?(val, raw)
 		if (@calibrated == false)
+			puts "Calib point: #{@calibration_points.length},  value:#{val}, raw:#{raw}"
 			p = CalibratedPoint.new(val, raw)
 			@calibration_points << p
 			if (@calibration_points.length == @num_of_entry)
@@ -49,9 +50,8 @@ class Calibration
 				end
 				@calibrated = true
 			end
-			return true
 		end
-		return false		
+		@calibrated
 	end
 
 	def value_from_raw(raw)
