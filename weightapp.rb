@@ -6,6 +6,14 @@ require_relative 'calibration'
 
 configure do
 	@calib = Calibration.instance
+
+	begin
+		File.open('/sys/bus/platfrom/drivers/hx711/power', 'r+') do |f|
+			f.puts '1'
+		end
+	rescue
+		puts 'Failed to open sysfs'
+	end
 end
 
 def get_raw
