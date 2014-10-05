@@ -16,18 +16,17 @@ class Calibration
 		@calibrated = false
 		@num_of_entry = 5
 		@calibration_points = Array.new(@num_of_entry)
+		load_calibration_data
 	end
 
 	def load_calibration_data
 		begin
-			f = File.open("calibration.yml", "r")
-			@calibration_points = YAML.load(f.read)
-			f.close
-			@calibrated = true
-			true
+			File.open("calibration.yml", "r") do |f|
+				@calibration_points = YAML.load(f.read)
+				@calibrated = true
+			end
 		rescue Exception => e
-		puts e
-		false
+			puts e
 		end
 	end
 

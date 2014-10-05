@@ -27,7 +27,7 @@ end
 set :bind, '0.0.0.0'
 
 get '/' do 
-	erb :index, :locals => {:gram => settings.calib.value_from_raw(get_raw), :raw => get_raw}
+	erb :index, :locals => {:gram => settings.calib.value_from_raw(get_raw.to_i), :raw => get_raw}
 end
 
 get '/calibration' do
