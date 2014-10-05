@@ -58,7 +58,7 @@ class Calibration
 
 		p_high = @calibration_points.bsearch { |x| x.raw >= raw }
 		if (p_high == nil)
-			'Out of scale'
+			'++++'
 		elsif (@calibration_points.index(p_high) == 0)
 			'----'
 		else

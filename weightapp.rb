@@ -27,7 +27,11 @@ end
 set :bind, '0.0.0.0'
 
 get '/' do 
-	erb :index, :locals => {:gram => settings.calib.value_from_raw(get_raw.to_i), :raw => get_raw}
+	g = settings.calib.value_from_raw(get_raw.to_i)
+	if g.class == Float
+		g = g.round(2)
+	end
+	erb :index, :locals => {:gram => g,  :raw => get_raw}
 end
 
 get '/calibration' do
