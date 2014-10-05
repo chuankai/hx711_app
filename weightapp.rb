@@ -40,7 +40,12 @@ get '/calibration' do
 end
 
 get '/calibration/:name' do |gram|
-	if (settings.calib.add_value_raw?(gram.to_i, get_raw.to_i))
+	raw = 0.0
+	5.times do |i|
+		raw += get_raw.to_f * 0.2
+		sleep(0.05)
+	end
+	if (settings.calib.add_value_raw?(gram.to_i, raw.to_i))
 		erb :calibration_done
 	else
 		erb :calibration
