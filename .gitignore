@@ -1,4 +1,4 @@
 *.sw*
 .DS_Store
 calibration.yml
-log/*
+*.txt
