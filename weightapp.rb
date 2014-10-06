@@ -3,7 +3,7 @@
 require 'sinatra'
 require 'erubis'
 require_relative 'calibration'
-
+require_relative 'weight_log.rb'
 
 configure do
 	set :calib, Calibration.instance
@@ -15,6 +15,9 @@ configure do
 	rescue
 		puts 'Failed to open sysfs'
 	end
+
+	WeightLogger.instance.config('10', false)
+	WeightLogger.instance.start
 end
 
 def get_raw

@@ -1,9 +1,9 @@
 !#/usr/bin/ruby
 
 require 'eventmachine'
-require 'calibration'
 require 'singleton'
 require 'date'
+require_relative 'calibration'
 
 module LoggerState
 	DISABLED = 1
@@ -22,33 +22,34 @@ class WeightLogger
 
 	def initialize
 		Dir.mkdir('log') unless Dir.exists?('log')
-		@state = LoggerState.DISABLED
+		@state = LoggerState::DISABLED
+		@freq = 30
+		@mail_notification = false
+		@mail_address = ''
 	end
 
-	def config(frequency, duration, enable_mail_notification, mail_address) 
+	def config(frequency=30, enable_mail_notification=false, mail_address='')
 		@freq = frequency
-		@duration = duration
 		@mail_notification = enable_mail_notification
 		@mail_address = mail_address
 	end
 
 	def start
-		name = Date.today.to_s
+		name = Date.today.to_s + '.txt'
 		begin
 			f= File.open(name, 'a');
 		rescue
 			puts 'File open failed'
 		end
-		if (@state == LoggerState.DISABLED)
+		if (@state == LoggerState::DISABLED)
 			EM.run do
-				@timer_stopped = false
 				EM.add_periodic_timer(@freq) do
-					if @state == LoggerState.ENABLED_STOPPED
+					if @state == LoggerState::ENABLED_STOPPED
 						EM.stop_event_loop
-						@state = LoggerState.DISABLED
+						@state = LoggerState::DISABLED
 					end
 
-					if name != Date.today.to_s
+					if name != Date.today.to_s + '.txt'
 						f.close
 						send_mail(name + '.txt') if @mail_notification
 						name = Date.today.to_s
@@ -58,25 +59,22 @@ class WeightLogger
 						puts 'File opne failed'
 						end
 					end
-					gram = Calibratin.instance.value_from_raw(IO.read('/sys/bus/platform/drivers/hx711/raw'))
+					gram = Calibration.instance.value_from_raw(IO.read('/sys/bus/platform/drivers/hx711/raw').to_i)
+					if gram.class == Float
+						gram = gram.round(2)
+					end
 					f.puts "#{Time.now.secs_of_today} #{gram}"
 				end
 			end
-			@state = LoggerState.ENABLED_RUNNING
+			@state = LoggerState::ENABLED_RUNNING
 		end
 	end
 
 	def stop
-		@timer_stopped = true
+		@state == LoggerState::ENABLED_STOPPED if @state == LoggerState::ENABLED_RUNNING
 	end
 
 	def send_mail
 		puts 'send_mail'
 	end
-end
-
-
-
-class WeightTrigger
-	include Singleton
 end
