@@ -16,7 +16,7 @@ configure do
 		puts 'Failed to open sysfs'
 	end
 
-	WeightLogger.instance.config('10', false)
+	WeightLogger.instance.config(30, false)
 	WeightLogger.instance.start
 end
 

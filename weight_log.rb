@@ -1,6 +1,5 @@
 !#/usr/bin/ruby
 
-require 'eventmachine'
 require 'singleton'
 require 'date'
 require_relative 'calibration'
@@ -23,13 +22,13 @@ class WeightLogger
 	def initialize
 		Dir.mkdir('log') unless Dir.exists?('log')
 		@state = LoggerState::DISABLED
-		@freq = 30
+		@interval = 30
 		@mail_notification = false
 		@mail_address = ''
 	end
 
-	def config(frequency=30, enable_mail_notification=false, mail_address='')
-		@freq = frequency
+	def config(interval=30, enable_mail_notification=false, mail_address='')
+		@interval = interval
 		@mail_notification = enable_mail_notification
 		@mail_address = mail_address
 	end
@@ -37,16 +36,18 @@ class WeightLogger
 	def start
 		name = Date.today.to_s + '.txt'
 		begin
-			f= File.open(name, 'a');
+			f= File.open('log/' + name, 'a');
 		rescue
 			puts 'File open failed'
 		end
 		if (@state == LoggerState::DISABLED)
-			EM.run do
-				EM.add_periodic_timer(@freq) do
+			Thread.new do
+				@state = LoggerState::ENABLED_RUNNING
+				loop do
 					if @state == LoggerState::ENABLED_STOPPED
-						EM.stop_event_loop
+						f.flush
 						@state = LoggerState::DISABLED
+						break
 					end
 
 					if name != Date.today.to_s + '.txt'
@@ -54,19 +55,17 @@ class WeightLogger
 						send_mail(name + '.txt') if @mail_notification
 						name = Date.today.to_s
 						begin
-						f = File.open(name + '.txt', 'a')
+						f = File.open('log/' + name + '.txt', 'a')
 						rescue
 						puts 'File opne failed'
 						end
 					end
 					gram = Calibration.instance.value_from_raw(IO.read('/sys/bus/platform/drivers/hx711/raw').to_i)
-					if gram.class == Float
-						gram = gram.round(2)
-					end
+					gram = gram.round(2)
 					f.puts "#{Time.now.secs_of_today} #{gram}"
+					sleep(@interval)
 				end
 			end
-			@state = LoggerState::ENABLED_RUNNING
 		end
 	end
 
