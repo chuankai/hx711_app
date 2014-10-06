@@ -25,6 +25,16 @@ body {
 	font-family: "Times New Roman", Times, serif;
 }
 
+#body-log {
+	display: block;
+	text-align: center;
+	vertical-align: middle;
+	font-size: 150%;
+	font-style: normal;
+	color: #FFFFCC;
+	font-family: "Times New Roman", Times, serif;
+}
+
 IMG.center {
 	display: block;
 	margin-left: auto;

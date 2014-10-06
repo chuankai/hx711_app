@@ -7,6 +7,7 @@ require_relative 'weight_log.rb'
 
 configure do
 	set :calib, Calibration.instance
+	enable :static
 
 	begin
 		File.open('/sys/bus/platform/drivers/hx711/power', 'r+') do |f|
@@ -55,4 +56,9 @@ end
 
 get '/calibration_done' do
 	erb :calibration_done
+end
+
+get '/log' do
+	entries = Dir.entries("public").select! {|e| e.slice(-4..-1) == '.txt'}
+	erb :log, :locals => {:entries => entries}
 end

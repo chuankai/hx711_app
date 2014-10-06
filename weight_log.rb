@@ -20,7 +20,6 @@ class WeightLogger
 	include Singleton
 
 	def initialize
-		Dir.mkdir('log') unless Dir.exists?('log')
 		@state = LoggerState::DISABLED
 		@interval = 30
 		@mail_notification = false
@@ -36,7 +35,7 @@ class WeightLogger
 	def start
 		name = Date.today.to_s + '.txt'
 		begin
-			f= File.open('log/' + name, 'a');
+			f= File.open('public/' + name, 'a');
 		rescue
 			puts 'File open failed'
 		end
@@ -55,7 +54,7 @@ class WeightLogger
 						send_mail(name + '.txt') if @mail_notification
 						name = Date.today.to_s
 						begin
-						f = File.open('log/' + name + '.txt', 'a')
+						f = File.open('public/' + name + '.txt', 'a')
 						rescue
 						puts 'File opne failed'
 						end

@@ -1,0 +1,12 @@
+<div id="header">
+	<a href="/">
+	<img class="center" src="/cats.png">
+	</a>
+</div>
+<% entries.each do |f| %>
+<div id="body-log">
+	<a href="/<%= f %>">
+	<%= f %>
+	</a>
+</div>
+<% end %>
