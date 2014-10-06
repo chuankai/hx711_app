@@ -1,3 +1,4 @@
-*.swp
+*.sw*
 .DS_Store
 calibration.yml
+log/*
