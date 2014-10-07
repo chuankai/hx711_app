@@ -45,7 +45,7 @@ class WeightLogger
 	end
 
 	def start
-		send_info
+		#send_info
 		name = Date.today.to_s + '.txt'
 		begin
 			@f= File.open('public/' + name, 'a');
