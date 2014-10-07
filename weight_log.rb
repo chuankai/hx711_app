@@ -72,7 +72,8 @@ class WeightLogger
 						puts 'File open failed'
 						end
 					end
-					gram = Calibration.instance.value_from_raw(IO.read('/sys/bus/platform/drivers/hx711/raw').to_i)
+					#gram = Calibration.instance.value_from_raw(IO.read('/sys/bus/platform/drivers/hx711/raw').to_i)
+					gram = 0.0
 					gram = gram.round(2)
 					@f.puts "#{Time.now.secs_of_today} #{gram}"
 					sleep(@interval)
