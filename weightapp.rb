@@ -64,3 +64,7 @@ get '/log' do
 	erb :log, :locals => {:entries => entries}
 end
 
+get '/log/:name' do
+	WeightLogger.instance.flush_log
+	redirect to("/#{params[:name]}")
+end
