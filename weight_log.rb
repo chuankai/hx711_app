@@ -25,6 +25,7 @@ class WeightLogger
 		@interval = 30
 		@mail_notification = false
 		@mail_address = ''
+		@f = nil
 
 		Mail.defaults do
 			delivery_method :smtp, {:address              => "smtp.gmail.com",
@@ -47,7 +48,7 @@ class WeightLogger
 		send_info
 		name = Date.today.to_s + '.txt'
 		begin
-			f= File.open('public/' + name, 'a');
+			@f= File.open('public/' + name, 'a');
 		rescue
 			puts 'File open failed'
 		end
@@ -56,24 +57,24 @@ class WeightLogger
 				@state = LoggerState::ENABLED_RUNNING
 				loop do
 					if @state == LoggerState::ENABLED_STOPPED
-						f.flush
+						@f.flush
 						@state = LoggerState::DISABLED
 						break
 					end
 
 					if name != Date.today.to_s + '.txt'
-						f.close
+						@f.close
 						send_log(name + '.txt') if @mail_notification
 						name = Date.today.to_s
 						begin
-						f = File.open('public/' + name + '.txt', 'a')
+						@f = File.open('public/' + name + '.txt', 'a')
 						rescue
-						puts 'File opne failed'
+						puts 'File open failed'
 						end
 					end
 					gram = Calibration.instance.value_from_raw(IO.read('/sys/bus/platform/drivers/hx711/raw').to_i)
 					gram = gram.round(2)
-					f.puts "#{Time.now.secs_of_today} #{gram}"
+					@f.puts "#{Time.now.secs_of_today} #{gram}"
 					sleep(@interval)
 				end
 			end
@@ -109,5 +110,9 @@ class WeightLogger
 			body "Hi, \nYour cats are ready to drink water. Check it out at	http://#{ip_addr}:4567" 
 		end
 		mail.deliver!
+	end
+
+	def flush_log
+		@f.flush
 	end
 end
