@@ -26,9 +26,6 @@ def get_raw
 	0
 end
 
-def read_calibrated_value
-end
-
 set :bind, '0.0.0.0'
 
 get '/' do 
