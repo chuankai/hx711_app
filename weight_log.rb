@@ -2,6 +2,7 @@
 
 require 'singleton'
 require 'date'
+require 'mail'
 require_relative 'calibration'
 
 module LoggerState
@@ -24,6 +25,16 @@ class WeightLogger
 		@interval = 30
 		@mail_notification = false
 		@mail_address = ''
+
+		Mail.defaults do
+			delivery_method :smtp, {:address              => "smtp.gmail.com",
+						:port                 => 587,
+						:domain               => 'kai.idv.tw',
+						:user_name            => 'chuankai@kai.idv.tw',
+						:password             => '23FrSw35',
+						:authentication       => 'plain',
+						:enable_starttls_auto => true}
+		end
 	end
 
 	def config(interval=30, enable_mail_notification=false, mail_address='')
@@ -33,6 +44,7 @@ class WeightLogger
 	end
 
 	def start
+		send_info
 		name = Date.today.to_s + '.txt'
 		begin
 			f= File.open('public/' + name, 'a');
@@ -51,7 +63,7 @@ class WeightLogger
 
 					if name != Date.today.to_s + '.txt'
 						f.close
-						send_mail(name + '.txt') if @mail_notification
+						send_log(name + '.txt') if @mail_notification
 						name = Date.today.to_s
 						begin
 						f = File.open('public/' + name + '.txt', 'a')
@@ -72,7 +84,30 @@ class WeightLogger
 		@state == LoggerState::ENABLED_STOPPED if @state == LoggerState::ENABLED_RUNNING
 	end
 
-	def send_mail
+	def send_log(file)
 		puts 'send_mail'
+
+		mail = Mail.new do
+			from 'chuankai@kai.idv.tw'
+			#to 'anilx.yang@intel.com'
+			to 'r91921080@ntu.edu.tw'
+			subject 'Cats drink water'
+			body "Hi, \nYour cats have sent you the log file."
+			add_file '/root/hx711_app/public/' + file
+		end
+		mail.deliver!
+	end
+
+	def send_info
+		ip_addr = `ifconfig`.match(/192\.\d{,3}\.\d{,3}\.\d{,3}/).to_s
+		
+		mail = Mail.new do
+			from 'chuankai@kai.idv.tw'
+			#to 'anilx.yang@intel.com'
+			to 'r91921080@ntu.edu.tw'
+			subject 'Cats are ready to drink water'
+			body "Hi, \nYour cats are ready to drink water. Check it out at	http://#{ip_addr}:4567" 
+		end
+		mail.deliver!
 	end
 end
