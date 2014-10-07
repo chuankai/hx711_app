@@ -72,7 +72,8 @@ class WeightLogger
 						puts 'File open failed'
 						end
 					end
-					gram = Calibration.instance.value_from_raw(IO.read('/sys/bus/platform/drivers/hx711/raw').to_i)
+					#gram = Calibration.instance.value_from_raw(IO.read('/sys/bus/platform/drivers/hx711/raw').to_i)
+					gram = 0.0
 					gram = gram.round(2)
 					@f.puts "#{Time.now.secs_of_today} #{gram}"
 					sleep(@interval)
@@ -90,7 +91,6 @@ class WeightLogger
 
 		mail = Mail.new do
 			from 'chuankai@kai.idv.tw'
-			#to 'anilx.yang@intel.com'
 			to 'r91921080@ntu.edu.tw'
 			subject 'Cats drink water'
 			body "Hi, \nYour cats have sent you the log file."
@@ -104,7 +104,6 @@ class WeightLogger
 		
 		mail = Mail.new do
 			from 'chuankai@kai.idv.tw'
-			#to 'anilx.yang@intel.com'
 			to 'r91921080@ntu.edu.tw'
 			subject 'Cats are ready to drink water'
 			body "Hi, \nYour cats are ready to drink water. Check it out at	http://#{ip_addr}:4567" 

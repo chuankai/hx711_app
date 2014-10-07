@@ -9,20 +9,21 @@ configure do
 	set :calib, Calibration.instance
 	enable :static
 
-	begin
-		File.open('/sys/bus/platform/drivers/hx711/power', 'r+') do |f|
-			f.puts '1'
-		end
-	rescue
-		puts 'Failed to open sysfs'
-	end
+       # begin
+       # 	File.open('/sys/bus/platform/drivers/hx711/power', 'r+') do |f|
+       # 		f.puts '1'
+       # 	end
+       # rescue
+       # 	puts 'Failed to open sysfs'
+       # end
 
 	WeightLogger.instance.config(30, false)
 	WeightLogger.instance.start
 end
 
 def get_raw
-	IO.read("/sys/bus/platform/drivers/hx711/raw")
+	#IO.read("/sys/bus/platform/drivers/hx711/raw")
+	0
 end
 
 def read_calibrated_value
