@@ -54,7 +54,7 @@ class Calibration
 	end
 
 	def value_from_raw(raw)
-		return unless @calibrated
+		return 0.0 unless @calibrated
 
 		p_high = @calibration_points.bsearch { |x| x.raw >= raw }
 		if (p_high == nil)
