@@ -103,6 +103,7 @@ class WeightLogger
 	end
 
 	def send_info
+		pust "email address: #{@mail_address}"
 		ip_addr = `ifconfig`.match(/192\.\d{,3}\.\d{,3}\.\d{,3}/).to_s
 		addr = @mail_address
 		mail = Mail.new do
