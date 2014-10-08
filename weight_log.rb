@@ -90,13 +90,16 @@ class WeightLogger
 
 		mail = Mail.new do
 			from 'chuankai@kai.idv.tw'
-			#to 'anilx.yang@intel.com'
-			to 'r91921080@ntu.edu.tw'
+			to 'anilyang.tw@gmail.com'
 			subject 'Cats drink water'
 			body "Hi, \nYour cats have sent you the log file."
 			add_file '/root/hx711_app/public/' + file
 		end
-		mail.deliver!
+		begin
+			mail.deliver!
+		rescue
+			puts 'mail deliver failed'
+		end
 	end
 
 	def send_info
@@ -104,12 +107,15 @@ class WeightLogger
 		
 		mail = Mail.new do
 			from 'chuankai@kai.idv.tw'
-			#to 'anilx.yang@intel.com'
-			to 'r91921080@ntu.edu.tw'
+			to 'anilxyang.tw@gmail.com'
 			subject 'Cats are ready to drink water'
 			body "Hi, \nYour cats are ready to drink water. Check it out at	http://#{ip_addr}:4567" 
 		end
-		mail.deliver!
+		begin
+			mail.deliver!
+		rescue
+			puts 'mail deliver failed'
+		end
 	end
 
 	def flush_log
