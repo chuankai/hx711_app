@@ -59,8 +59,11 @@ get '/calibration_done' do
 end
 
 get '/log' do
-	WeightLogger.instance.flush_log
 	entries = Dir.entries("public").select! {|e| e.slice(-4..-1) == '.txt'}
 	erb :log, :locals => {:entries => entries}
 end
 
+get '/log/:name' do
+	WeightLogger.instance.flush_log
+	redirect to("/#{params[:name]}")
+end
