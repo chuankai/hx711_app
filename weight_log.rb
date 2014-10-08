@@ -45,7 +45,7 @@ class WeightLogger
 	end
 
 	def start
-		send_info
+		send_info if @mail_notification
 		name = Date.today.to_s + '.txt'
 		begin
 			@f= File.open('public/' + name, 'a');
@@ -90,7 +90,8 @@ class WeightLogger
 
 		mail = Mail.new do
 			from 'chuankai@kai.idv.tw'
-			to 'anilyang.tw@gmail.com'
+			#to 'anilyang.tw@gmail.com'
+			to @mail_address
 			subject 'Cats drink water'
 			body "Hi, \nYour cats have sent you the log file."
 			add_file '/root/hx711_app/public/' + file
@@ -107,7 +108,8 @@ class WeightLogger
 		
 		mail = Mail.new do
 			from 'chuankai@kai.idv.tw'
-			to 'anilxyang.tw@gmail.com'
+			#to 'anilyang.tw@gmail.com'
+			to @mail_address
 			subject 'Cats are ready to drink water'
 			body "Hi, \nYour cats are ready to drink water. Check it out at	http://#{ip_addr}:4567" 
 		end

@@ -17,7 +17,8 @@ configure do
 		puts 'Failed to open sysfs'
 	end
 
-	WeightLogger.instance.config(30, false)
+	#WeightLogger.instance.config(30, true, 'anilyang.tw@gmail.com')
+	WeightLogger.instance.config(30, true, 'r91921080@ntu.edu.tw')
 	WeightLogger.instance.start
 end
 
