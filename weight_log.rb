@@ -86,12 +86,11 @@ class WeightLogger
 	end
 
 	def send_log(file)
-		puts 'send_mail'
-
+		addr = @mail_address
 		mail = Mail.new do
 			from 'chuankai@kai.idv.tw'
 			#to 'anilyang.tw@gmail.com'
-			to @mail_address
+			to addr
 			subject 'Cats drink water'
 			body "Hi, \nYour cats have sent you the log file."
 			add_file '/root/hx711_app/public/' + file
@@ -105,11 +104,11 @@ class WeightLogger
 
 	def send_info
 		ip_addr = `ifconfig`.match(/192\.\d{,3}\.\d{,3}\.\d{,3}/).to_s
-		
+		addr = @mail_address
 		mail = Mail.new do
 			from 'chuankai@kai.idv.tw'
 			#to 'anilyang.tw@gmail.com'
-			to @mail_address
+			to addr
 			subject 'Cats are ready to drink water'
 			body "Hi, \nYour cats are ready to drink water. Check it out at	http://#{ip_addr}:4567" 
 		end
