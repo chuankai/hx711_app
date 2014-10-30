@@ -89,7 +89,6 @@ class WeightLogger
 		addr = @mail_address
 		mail = Mail.new do
 			from 'chuankai@kai.idv.tw'
-			#to 'anilyang.tw@gmail.com'
 			to addr
 			subject 'Cats drink water'
 			body "Hi, \nYour cats have sent you the log file."
@@ -108,7 +107,6 @@ class WeightLogger
 		addr = @mail_address
 		mail = Mail.new do
 			from 'chuankai@kai.idv.tw'
-			#to 'anilyang.tw@gmail.com'
 			to addr
 			subject 'Cats are ready to drink water'
 			body "Hi, \nYour cats are ready to drink water. Check it out at	http://#{ip_addr}:4567" 
