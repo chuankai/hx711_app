@@ -1,0 +1,15 @@
+[Unit]
+Description=Weight App Service
+Requires=hx711.service
+After=network.target hx711.service
+
+[Service]
+Type=simple
+KillMode=process
+RemainAfterExit=yes
+ExecStart=/root/hx711_app/weightapp.rb
+ExecStop=/usr/binecho 'Weight App Service stopped'
+WorkingDirectory=/root/hx711_app
+
+[Install]
+WantedBy=multi-user.target
