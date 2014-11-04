@@ -6,7 +6,10 @@ require_relative 'calibration'
 require_relative 'weight_log.rb'
 
 configure do
+	calib_gram_entries = [0, 400, 800, 1200, 1600, 2000, 2400, 2800]
 	set :calib, Calibration.instance
+	set :calib_gram, calib_gram_entries
+	set :calib_index, 0
 	enable :static
 
        # begin
@@ -17,8 +20,9 @@ configure do
        # 	puts 'Failed to open sysfs'
        # end
 
-	WeightLogger.instance.config(30, true, 'anilyang.tw@gmail.com')
+	WeightLogger.instance.config(30, false)
 	WeightLogger.instance.start
+	Calibration.instance.num_of_entry = calib_gram_entries.length
 end
 
 def get_raw
@@ -36,7 +40,8 @@ end
 
 get '/calibration' do
 	settings.calib.clear_calibration_data
-	erb :calibration
+	settings.calib_index = 0
+	erb :calibration, :locals => {:gram => settings.calib_gram[0]}
 end
 
 get '/calibration/:name' do |gram|
@@ -48,7 +53,8 @@ get '/calibration/:name' do |gram|
 	if (settings.calib.add_value_raw?(gram.to_i, raw.to_i))
 		erb :calibration_done
 	else
-		erb :calibration
+		settings.calib_index += 1
+		erb :calibration, :locals => {:gram => settings.calib_gram[settings.calib_index]}
 	end
 end
 
