@@ -12,9 +12,11 @@ end
 class Calibration
 	include Singleton
 
+	attr_accessor :num_of_entry
+
 	def initialize
 		@calibrated = false
-		@num_of_entry = 5
+		@num_of_entry = 0
 		@calibration_points = Array.new(@num_of_entry)
 		load_calibration_data
 	end

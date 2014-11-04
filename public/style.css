@@ -1,3 +1,7 @@
+a:link {
+	text-decoration: none;
+}
+
 body {
 	display: block;
 	margin-left: auto;
@@ -17,8 +21,20 @@ body {
 	width: 200px;
 }
 
-#body-text {
+#body-calib {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	width: 190px;
+	height: 190px;
+	line-height: 190px;
 	text-align: center;
+	vertical-align: middle;
+	background-image: url("circle.png");
+	background-repeat: no-repeat;
+}
+
+#body-text {
 	font-size: 300%;
 	font-style: italic;
 	color: #FFFFCC;
