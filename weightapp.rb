@@ -20,7 +20,7 @@ configure do
 		puts 'Failed to open sysfs'
 	end
 
-	WeightLogger.instance.config(30, true, 'anilyang.tw@gmail.com')
+	WeightLogger.instance.config(10, true, 'anilyang.tw@gmail.com')
 	WeightLogger.instance.start
 	Calibration.instance.num_of_entry = calib_gram_entries.length
 end
