@@ -56,6 +56,8 @@ class WeightLogger
 			puts 'about to create the thread'
 			Thread.new do
 				@state = LoggerState::ENABLED_RUNNING
+
+				inputs = Array.new
 				loop do
 					if @state == LoggerState::ENABLED_STOPPED
 						@f.flush
@@ -74,8 +76,12 @@ class WeightLogger
 						puts 'File open failed'
 						end
 					end
-					gram = Calibration.instance.value_from_raw(IO.read('/sys/bus/platform/drivers/hx711/raw').to_i)
-					gram = gram.round(2)
+					inputs.clear
+					1.upto 5 do
+						inputs << Calibration.instance.value_from_raw(IO.read('/sys/bus/platform/drivers/hx711/raw').to_i).round(2)
+					end
+					inputs.sort!
+					gram = inputs[2]
 					@f.puts "#{Time.now.secs_of_today} #{gram}"
 					sleep(@interval)
 				end
