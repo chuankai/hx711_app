@@ -60,9 +60,9 @@ class Calibration
 
 		p_high = @calibration_points.bsearch { |x| x.raw >= raw }
 		if (p_high == nil)
-			800.0	
+			@calibration_points.last.val.to_f
 		elsif (@calibration_points.index(p_high) == 0)
-			0.0
+			@calibration_points.first.val.to_f
 		else
 			p_low = @calibration_points[@calibration_points.index(p_high) - 1]
 			r = Rational((raw - p_low.raw ), (p_high.raw - p_low.raw))
