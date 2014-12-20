@@ -23,6 +23,8 @@ class WeightLogger
 	def initialize
 		@state = LoggerState::DISABLED
 		@interval = 30
+		@max_val = 0
+		@min_val = 0
 		@mail_notification = false
 		@mail_address = ''
 		@f = nil
@@ -38,10 +40,12 @@ class WeightLogger
 		end
 	end
 
-	def config(interval=30, enable_mail_notification=false, mail_address='')
+	def config(interval, enable_mail_notification, mail_address, max_val, min_val)
 		@interval = interval
 		@mail_notification = enable_mail_notification
 		@mail_address = mail_address
+		@max_val = max_val
+		@min_val = min_val
 	end
 
 	def start
@@ -58,6 +62,8 @@ class WeightLogger
 				@state = LoggerState::ENABLED_RUNNING
 
 				inputs = Array.new
+				gram = 0
+				warning = ''
 				loop do
 					if @state == LoggerState::ENABLED_STOPPED
 						@f.flush
@@ -79,10 +85,18 @@ class WeightLogger
 					inputs.clear
 					1.upto 5 do
 						inputs << Calibration.instance.value_from_raw(IO.read('/sys/bus/platform/drivers/hx711/raw').to_i).round(2)
+						sleep(0.05)
 					end
 					inputs.sort!
-					gram = inputs[2]
-					@f.puts "#{Time.now.secs_of_today} #{gram}"
+					if inputs[2] == @max_val
+						warning = 'higher than max'
+					elsif inputs[2] == @min_val
+						warning = 'lower than min'
+					else
+						gram = inputs[2]
+						warning = ''
+					end
+					@f.puts "#{Time.now.secs_of_today} #{gram} #{warning}"
 					sleep(@interval)
 				end
 			end
