@@ -83,6 +83,7 @@ end
 
 get '/motor/:sec' do
 	settings.motor.write(0, 1)
-	sleep(sec)
+	sleep(params[:sec].to_i)
+	puts "motor runs for #{params[:sec]} seconds"
 	settings.motor.write(0, 0)
 end
