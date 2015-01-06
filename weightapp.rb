@@ -4,12 +4,18 @@ require 'sinatra'
 require 'erubis'
 require_relative 'calibration'
 require_relative 'weight_log.rb'
+require 'wiringpi'
 
 configure do
+	out = WiringPi::GPIO.new
+	out.mode(0, OUTPUT)
+	out.write(0, 0)
+	
 	calib_gram_entries = [0, 400, 800, 1200, 1600, 2000, 2400, 2800]
 	set :calib, Calibration.instance
 	set :calib_gram, calib_gram_entries
 	set :calib_index, 0
+	set :motor, out
 	enable :static
 
 	begin
@@ -23,6 +29,7 @@ configure do
 	WeightLogger.instance.config(10, true, 'anilyang.tw@gmail.com', calib_gram_entries.last, calib_gram_entries.first)
 	WeightLogger.instance.start
 	Calibration.instance.num_of_entry = calib_gram_entries.length
+
 end
 
 def get_raw
@@ -72,4 +79,10 @@ end
 get '/log/:name' do
 	WeightLogger.instance.flush_log
 	redirect to("/#{params[:name]}")
+end
+
+get '/motor/:sec' do
+	settings.motor.write(0, 1)
+	sleep(sec)
+	settings.motor.write(0, 0)
 end
