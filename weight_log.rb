@@ -4,6 +4,7 @@ require 'singleton'
 require 'date'
 require 'mail'
 require_relative 'calibration'
+require 'wiringpi'
 
 module LoggerState
 	DISABLED = 1
@@ -19,6 +20,8 @@ end
 
 class WeightLogger
 	include Singleton
+	
+	DRIVER_PIN = 0
 
 	def initialize
 		@state = LoggerState::DISABLED
@@ -28,6 +31,9 @@ class WeightLogger
 		@mail_notification = false
 		@mail_address = ''
 		@f = nil
+		@driver = WiringPi::GPIO.new
+		@driver.mode(DRIVER_PIN, OUTPUT)
+		@driver.write(DRIVER_PIN, 0)
 
 		Mail.defaults do
 			delivery_method :smtp, {:address              => "smtp.gmail.com",
@@ -63,6 +69,8 @@ class WeightLogger
 
 				inputs = Array.new
 				gram = 0
+				prev_gram = 0
+				trend_count = 0
 				warning = ''
 				loop do
 					if @state == LoggerState::ENABLED_STOPPED
@@ -96,6 +104,21 @@ class WeightLogger
 						gram = inputs[2]
 						warning = ''
 					end
+
+					if prev_gram - gram > 1
+						trend_count += 1
+					else
+						trend_count = 0
+					end
+
+					if trend_count == 4
+						trend_count = 0
+						@driver.write(DRIVER_PIN, 1)
+						sleep(1)
+						@driver.write(DRIVER_PIN, 0)
+					end
+
+					prev_gram = gram
 					@f.puts "#{Time.now.secs_of_today} #{gram} #{warning}"
 					sleep(@interval)
 				end
