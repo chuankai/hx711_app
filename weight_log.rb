@@ -69,7 +69,10 @@ class WeightLogger
 
 				inputs = Array.new
 				gram = 0
-				prev_gram = 0
+				queue = Array.new(4)
+				3.times do
+					queue << 1.0
+				end
 				trend_count = 0
 				warning = ''
 				loop do
@@ -105,20 +108,20 @@ class WeightLogger
 						warning = ''
 					end
 
-					if prev_gram - gram > 1
+					if queue.last - gram > 1
 						trend_count += 1
 					else
 						trend_count = 0
 					end
 
-					if trend_count == 4
+					if (trend_count == 4 && queue.shift - gram > 8)
 						trend_count = 0
 						@driver.write(DRIVER_PIN, 1)
 						sleep(1)
 						@driver.write(DRIVER_PIN, 0)
 					end
 
-					prev_gram = gram
+					queue.push gram
 					@f.puts "#{Time.now.secs_of_today} #{gram} #{warning}"
 					sleep(@interval)
 				end
