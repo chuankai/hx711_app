@@ -105,7 +105,7 @@ class WeightLogger
 						warning = ''
 					end
 
-					if prev_gram - gram > 1
+					if prev_gram - gram > 2
 						trend_count += 1
 					else
 						trend_count = 0
