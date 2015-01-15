@@ -31,7 +31,8 @@ class WeightLogger
 		@mail_notification = false
 		@mail_address = ''
 		@f = nil
-		@driver = WiringPi::GPIO.new
+		@driver = WiringPi::GPIO.new/queue
+	uuuu
 		@driver.mode(DRIVER_PIN, OUTPUT)
 		@driver.write(DRIVER_PIN, 0)
 
@@ -69,7 +70,7 @@ class WeightLogger
 
 				inputs = Array.new
 				gram = 0
-				queue = Array.new(4)
+				queue = Array.new()
 				3.times do
 					queue << 1.0
 				end
