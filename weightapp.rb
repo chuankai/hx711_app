@@ -4,18 +4,14 @@ require 'sinatra'
 require 'erubis'
 require_relative 'calibration'
 require_relative 'weight_log.rb'
-require 'wiringpi'
+require_relative 'stepper.rb'
 
 configure do
-	out = WiringPi::GPIO.new
-	out.mode(0, OUTPUT)
-	out.write(0, 0)
-	
 	calib_gram_entries = [0, 400, 800, 1200, 1600, 2000, 2400, 2800]
 	set :calib, Calibration.instance
 	set :calib_gram, calib_gram_entries
 	set :calib_index, 0
-	set :motor, out
+	set :stepper, stepper.new(0, 1, 2, 3, 0.01)
 	enable :static
 
 	begin
@@ -81,9 +77,11 @@ get '/log/:name' do
 	redirect to("/#{params[:name]}")
 end
 
-get '/motor/:sec' do
-	settings.motor.write(0, 1)
-	sleep(params[:sec].to_i)
-	puts "motor runs for #{params[:sec]} seconds"
-	settings.motor.write(0, 0)
+get '/motor/test/:sec/:interval' do
+	s = settings.stepper;
+	s.setInterval(params[:interval].to_f)
+	s.run
+	sleep(params[:sec].to_f) 
+	s.stop
 end
+		
