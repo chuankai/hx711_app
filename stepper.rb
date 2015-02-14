@@ -3,13 +3,13 @@
 require 'wiringpi'
 
 class Stepper
-	def initialize (pin1, pin2, pin3, pin4, interval) 
+	def initialize(pin1, pin2, pin3, pin4, interval) 
 		@gpio = WiringPi::GPIO.new 
 		@pin1 = pin1
 		@pin2 = pin2
 		@pin3 = pin3
 		@pin4 = pin4
-		@inteval = inteval
+		@interval = interval
 		@running = false
 
 		@gpio.mode(pin1, OUTPUT)
@@ -60,6 +60,10 @@ class Stepper
 
 	def stop
 		@running = false
+	end
+
+	def setInterval(interval)
+		@interval = interval
 	end
 end
 
