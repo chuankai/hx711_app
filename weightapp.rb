@@ -11,7 +11,7 @@ configure do
 	set :calib, Calibration.instance
 	set :calib_gram, calib_gram_entries
 	set :calib_index, 0
-	set :stepper, stepper.new(0, 1, 2, 3, 0.01)
+	set :stepper, stepper.new(0, 1, 3, 4, 0.01)
 	enable :static
 
 	begin

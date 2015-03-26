@@ -38,28 +38,24 @@ class Stepper
 				@gpio.write(@pin2, 0)
 				@gpio.write(@pin3, 0)
 				@gpio.write(@pin4, 0)
-				puts 'phase 1'
 				sleep @interval 
 
 				@gpio.write(@pin1, 0)
 				@gpio.write(@pin2, 0)
 				@gpio.write(@pin3, 0)
 				@gpio.write(@pin4, 1)
-				puts 'phase 2'
 				sleep @interval 
 
 				@gpio.write(@pin1, 0)
 				@gpio.write(@pin2, 1)
 				@gpio.write(@pin3, 0)
 				@gpio.write(@pin4, 0)
-				puts 'phase 3'
 				sleep @interval 
 
 				@gpio.write(@pin1, 0)
 				@gpio.write(@pin2, 0)
 				@gpio.write(@pin3, 1)
 				@gpio.write(@pin4, 0)
-				puts 'phase 4'
 				sleep @interval 
 			end
 		}
