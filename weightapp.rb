@@ -9,7 +9,7 @@ require_relative 'stepper.rb'
 
 configure do
 	calib_gram_entries = [0, 400, 800, 1200, 1600, 2000, 2400, 2800]
-	wpi = WiringPI::GPIO.new
+	wpi = WiringPi::GPIO.new
 	wpi.mode(0, OUTPUT)
 	wpi.write(0, 0)
 
@@ -95,7 +95,7 @@ end
 get '/motor/test/:sec' do
 	m = settings.motorpin
 	m.write(0, 1)
-	sleep(params[:sec].to_f))
+	sleep(params[:sec].to_f)
 	m.write(0, 0)
 end
 		
