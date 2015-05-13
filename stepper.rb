@@ -33,7 +33,6 @@ class Stepper
 					Thread.stop
 				end
 
-				puts 'Worker thread running'
 				@gpio.write(@pin1, 1)
 				@gpio.write(@pin2, 0)
 				@gpio.write(@pin3, 0)
