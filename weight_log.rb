@@ -117,7 +117,7 @@ class WeightLogger
 					if (queue.shift - gram > 30 && trend_count == 4)
 						trend_count = 0
 						@driver.write(DRIVER_PIN, 1)
-						sleep(1)
+						sleep(20)
 						@driver.write(DRIVER_PIN, 0)
 					end
 
