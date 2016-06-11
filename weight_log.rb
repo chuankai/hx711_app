@@ -30,7 +30,8 @@ class WeightLogger
 		@min_val = 0
 		@mail_notification = false
 		@mail_address = ''
-		@f = nil
+		@weight_log_file = nil
+		@action_log_file = nil
 		@driver = WiringPi::GPIO.new
 		@driver.mode(DRIVER_PIN, OUTPUT)
 		@driver.write(DRIVER_PIN, 0)
@@ -54,11 +55,49 @@ class WeightLogger
 		@min_val = min_val
 	end
 
+	def action(gram)
+		out = %x( ./rssi_scan.sh).lines
+		rssi_max = -999
+		id_max = ''
+		id = ''
+		rssi = -999
+		while line = out.shift do
+			id = ''
+			rssi = ''
+			if line =~ /> HCI Event: LE Meta Event/ then
+				line = out.shift
+				until line =~ /Address: (.*)/
+					line = out.shift
+					break unless line
+				end
+				id = $1 if line
+				line = out.shift
+				until line =~ /RSSI: (-\d*) dBm/
+					line = out.shift
+					break unless line
+				end
+				rssi = $1.to_i if line
+			end
+
+			if rssi > rssi_max
+				id_max = id
+				rssi_max = rssi
+			end
+
+		end
+		if rssi_max > -999
+			action_log_file.puts "#{Time.now.secs_of_today}\t#{id_max}\t#{rssi_max.to_s}\t#{gram}"
+		end
+	end
+
 	def start
 		send_info if @mail_notification
-		name = Date.today.to_s + '.txt'
+		date_start = Date.today
+		weight_log_file_name = date_start.to_s + '_weight_log.txt'
+		action_log_file_name = date_start.to_s + '_action_log.txt'
 		begin
-			@f= File.open('public/' + name, 'a');
+			@weight_log_file = File.open('public/' + weight_log_file_name, 'a');
+			@action_log_file = File.open('public/' + action_log_file_name, 'a');
 		rescue
 			puts 'File open failed'
 		end
@@ -77,20 +116,25 @@ class WeightLogger
 				warning = ''
 				loop do
 					if @state == LoggerState::ENABLED_STOPPED
-						@f.flush
+						@weight_log_file.flush
+						@action_log_file.flush
 						@state = LoggerState::DISABLED
 						break
 					end
 
-					if name != Date.today.to_s + '.txt'
+					if date_start != Date.today
 						puts 'A new day has begun'
-						@f.close
+						@weight_log_file.close
+						@action_log_file.close
 						#send_log(name + '.txt') if @mail_notification
-						name = Date.today.to_s
+						date_start = Date.today
 						begin
-						@f = File.open('public/' + name + '.txt', 'a')
+							weight_log_file_name = date_start.to_s + '_weight_log.txt'
+							action_log_file_name = date_start.to_s + '_action_log.txt'
+							@weight_log_file = File.open('public/' + weight_log_file_name, 'a')
+							@action_log_file = File.open('public/' + action_log_file_name, 'a')
 						rescue
-						puts 'File open failed'
+							puts 'File open failed'
 						end
 					end
 					inputs.clear
@@ -114,15 +158,14 @@ class WeightLogger
 						trend_count = 0
 					end
 
-					if (queue.shift - gram > 30 && trend_count == 4)
+					diff = queue.shift - gram
+					if (diff > 30 && trend_count == 4)
 						trend_count = 0
-						@driver.write(DRIVER_PIN, 1)
-						sleep(20)
-						@driver.write(DRIVER_PIN, 0)
+						action(diff)
 					end
 
 					queue.push gram
-					@f.puts "#{Time.now.secs_of_today} #{gram} #{warning}"
+					@weight_log_file.puts "#{Time.now.secs_of_today} #{gram} #{warning}"
 					sleep(@interval)
 				end
 			end
@@ -169,6 +212,8 @@ class WeightLogger
 	end
 
 	def flush_log
-		@f.flush unless @f.closed?
+		@weight_log_file.flush unless @weight_log_file.closed?
+		@action_log_file.flush unless @action_log_file.closed?
 	end
 end
+		if line
