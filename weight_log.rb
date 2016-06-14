@@ -58,6 +58,7 @@ class WeightLogger
 	def action(gram)
 		puts "Action start"
 		out = %x( ./rssi_scan.sh).lines
+		puts out
 		rssi_max = -999
 		id_max = ''
 		id = ''
@@ -165,10 +166,12 @@ class WeightLogger
 #						action(diff)
 #					end
 					action(50)
+					puts "Action done"
 
 					queue.push gram
 					@weight_log_file.puts "#{Time.now.secs_of_today} #{gram} #{warning}"
 					sleep(@interval)
+					puts "Sleep done"
 				end
 			end
 		end
