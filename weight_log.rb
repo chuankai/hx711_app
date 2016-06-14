@@ -216,4 +216,3 @@ class WeightLogger
 		@action_log_file.flush unless @action_log_file.closed?
 	end
 end
-		if line
