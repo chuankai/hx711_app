@@ -84,6 +84,7 @@ class WeightLogger
 				puts "C2"
         			rssi = $1.to_i if line
         		end
+			puts 'C4'
 
         		if rssi > rssi_max
         			id_max = id
