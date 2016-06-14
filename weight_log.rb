@@ -58,7 +58,7 @@ class WeightLogger
 	def action(gram)
 		puts "Action start"
 		out = %x(./scan_rssi.sh).lines
-		puts out
+		puts "Script returns with: #{out}"
 		rssi_max = -999
 		id_max = ''
 		id = ''
