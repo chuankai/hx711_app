@@ -63,30 +63,30 @@ class WeightLogger
 		id_max = ''
 		id = ''
 		rssi = -999
-		while line = out.shift do
-			id = ''
-			rssi = ''
-			if line =~ /> HCI Event: LE Meta Event/ then
-				line = out.shift
-				until line =~ /Address: (.*)/
-					line = out.shift
-					break unless line
-				end
-				id = $1 if line
-				line = out.shift
-				until line =~ /RSSI: (-\d*) dBm/
-					line = out.shift
-					break unless line
-				end
-				rssi = $1.to_i if line
-			end
+       # 	while line = out.shift do
+       # 		id = ''
+       # 		rssi = ''
+       # 		if line =~ /> HCI Event: LE Meta Event/ then
+       # 			line = out.shift
+       # 			until line =~ /Address: (.*)/
+       # 				line = out.shift
+       # 				break unless line
+       # 			end
+       # 			id = $1 if line
+       # 			line = out.shift
+       # 			until line =~ /RSSI: (-\d*) dBm/
+       # 				line = out.shift
+       # 				break unless line
+       # 			end
+       # 			rssi = $1.to_i if line
+       # 		end
 
-			if rssi > rssi_max
-				id_max = id
-				rssi_max = rssi
-			end
+       # 		if rssi > rssi_max
+       # 			id_max = id
+       # 			rssi_max = rssi
+       # 		end
 
-		end
+       # 	end
 		if rssi_max > -999
 			action_log_file.puts "#{Time.now.secs_of_today}\t#{id_max}\t#{rssi_max.to_s}\t#{gram}"
 		end
