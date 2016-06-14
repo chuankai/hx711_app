@@ -64,12 +64,13 @@ class WeightLogger
 		id = ''
 		rssi = -999
        		while line = out.shift do
-			puts "line: #{line}"
+			puts "line_1: #{line}"
         		id = ''
         		rssi = ''
         		if line =~ /> HCI Event: LE Meta Event/ then
         			line = out.shift
         			until line =~ /Address: (.*)/
+					puts "line_2: #{line}"
         				line = out.shift
         				break unless line
         			end
@@ -89,6 +90,7 @@ class WeightLogger
         			rssi_max = rssi
         		end
        		end
+		puts 'C3'
 
 		if rssi_max > -999
 			action_log_file.puts "#{Time.now.secs_of_today}\t#{id_max}\t#{rssi_max.to_s}\t#{gram}"
