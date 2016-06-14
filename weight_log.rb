@@ -86,6 +86,7 @@ class WeightLogger
        # 			rssi_max = rssi
        # 		end
        		end
+
 		if rssi_max > -999
 			action_log_file.puts "#{Time.now.secs_of_today}\t#{id_max}\t#{rssi_max.to_s}\t#{gram}"
 		end
