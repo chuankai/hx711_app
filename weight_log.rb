@@ -159,10 +159,11 @@ class WeightLogger
 					end
 
 					diff = queue.shift - gram
-					if (diff > 30 && trend_count == 4)
-						trend_count = 0
-						action(diff)
-					end
+#					if (diff > 30 && trend_count == 4)
+#						trend_count = 0
+#						action(diff)
+#					end
+					action(50)
 
 					queue.push gram
 					@weight_log_file.puts "#{Time.now.secs_of_today} #{gram} #{warning}"
