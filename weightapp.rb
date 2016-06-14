@@ -2,7 +2,7 @@
 
 require 'sinatra'
 require 'erubis'
-require 'wiringpi'
+require 'wiringpi2'
 require_relative 'calibration'
 require_relative 'weight_log.rb'
 require_relative 'stepper.rb'
@@ -10,8 +10,8 @@ require_relative 'stepper.rb'
 configure do
 	calib_gram_entries = [0, 400, 800, 1200, 1600, 2000, 2400, 2800]
 	wpi = WiringPi::GPIO.new
-	wpi.mode(0, OUTPUT)
-	wpi.write(0, 0)
+	wpi.pin_mode(0, WiringPi::OUTPUT)
+	wpi.digital_write(0, 0)
 
 	set :calib, Calibration.instance
 	set :calib_gram, calib_gram_entries

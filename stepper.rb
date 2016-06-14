@@ -1,6 +1,6 @@
 !#/usr/bin/ruby
 
-require 'wiringpi'
+require 'wiringpi2'
 
 class Stepper
 	def initialize(pin1, pin2, pin3, pin4, interval) 
@@ -12,15 +12,15 @@ class Stepper
 		@interval = interval
 		@running = false
 
-		@gpio.mode(pin1, OUTPUT)
-		@gpio.mode(pin2, OUTPUT)
-		@gpio.mode(pin3, OUTPUT)
-		@gpio.mode(pin4, OUTPUT)
+		@gpio.pin_mode(pin1, WiringPi::OUTPUT)
+		@gpio.pin_mode(pin2, WiringPi::OUTPUT)
+		@gpio.pin_mode(pin3, WiringPi::OUTPUT)
+		@gpio.pin_mode(pin4, WiringPi::OUTPUT)
 
-		@gpio.write(@pin1, 0)
-		@gpio.write(@pin2, 0)
-		@gpio.write(@pin3, 0)
-		@gpio.write(@pin4, 0)
+		@gpio.digital_write(@pin1, 0)
+		@gpio.digital_write(@pin2, 0)
+		@gpio.digital_write(@pin3, 0)
+		@gpio.digital_write(@pin4, 0)
 
 		@worker = Thread.new {
 			while true

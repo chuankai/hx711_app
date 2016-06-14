@@ -4,7 +4,7 @@ require 'singleton'
 require 'date'
 require 'mail'
 require_relative 'calibration'
-require 'wiringpi'
+require 'wiringpi2'
 
 module LoggerState
 	DISABLED = 1
@@ -32,8 +32,8 @@ class WeightLogger
 		@mail_address = ''
 		@f = nil
 		@driver = WiringPi::GPIO.new
-		@driver.mode(DRIVER_PIN, OUTPUT)
-		@driver.write(DRIVER_PIN, 0)
+		@driver.pin_mode(DRIVER_PIN, WiringPi::OUTPUT)
+		@driver.digital_write(DRIVER_PIN, 0)
 
 		Mail.defaults do
 			delivery_method :smtp, {:address              => "smtp.gmail.com",
