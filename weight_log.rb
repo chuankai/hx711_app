@@ -56,7 +56,7 @@ class WeightLogger
 	end
 
 	def action(gram)
-		out = %x( ./rssi_scan.sh).lines
+		out = %x( ./scan_rssi.sh).lines
 		rssi_max = -999
 		id_max = ''
 		id = ''
