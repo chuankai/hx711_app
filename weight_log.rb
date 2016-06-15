@@ -110,6 +110,8 @@ class WeightLogger
 			puts 'File open failed'
 		end
 		if (@state == LoggerState::DISABLED)
+			%x(hciconfig hci0 up)
+			%x(btmon&)
 			puts 'about to create the thread'
 			Thread.new do
 				@state = LoggerState::ENABLED_RUNNING

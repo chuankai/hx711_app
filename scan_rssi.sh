@@ -1,5 +1,3 @@
-hciconfig hci0 up
-btmon
 hcitool lescan
-sleep 20s
+sleep 18s
 exit 0
