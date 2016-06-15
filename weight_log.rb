@@ -66,7 +66,7 @@ class WeightLogger
        		while line = out.shift do
 			puts "line_1: #{line}"
         		id = ''
-        		rssi = ''
+        		rssi = -999
         		if line =~ /> HCI Event: LE Meta Event/
         			line = out.shift
         			until line =~ /Address: (.*)/
