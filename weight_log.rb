@@ -67,7 +67,7 @@ class WeightLogger
 			puts "line_1: #{line}"
         		id = ''
         		rssi = ''
-        		if line =~ /> HCI Event: LE Meta Event/ then
+        		if line =~ /> HCI Event: LE Meta Event/
         			line = out.shift
         			until line =~ /Address: (.*)/
 					puts "line_2: #{line}"
