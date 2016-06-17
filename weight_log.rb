@@ -5,6 +5,7 @@ require 'date'
 require 'mail'
 require_relative 'calibration'
 require 'wiringpi2'
+require 'open3'
 
 module LoggerState
 	DISABLED = 1
@@ -55,30 +56,43 @@ class WeightLogger
 		@min_val = min_val
 	end
 
+	def read_nonblock_retry(io)
+		line = String.new
+		begin
+			line = io.read_nonblock(1024)
+		rescue IO::WaitReadable
+			IO.select([io])
+			retry
+		end
+		line
+	end
+
 	def action(gram)
+
 		puts "Action start"
-		out = %x(./scan_rssi.sh).lines
-		puts "Script returns with: #{out}"
 		rssi_max = -999
 		id_max = ''
 		id = ''
 		rssi = -999
-       		while line = out.shift do
-			puts "line_1: #{line}"
+		time_start = Time.now
+		stdin, stdout, wait_thr = Open3.popen2("btmon")
+
+		while (Time.now - time_start) < 18 do
         		id = ''
         		rssi = -999
+			line = read_nonblock_retry(stdout)
         		if line =~ /> HCI Event: LE Meta Event/
-        			line = out.shift
+				line = read_nonblock_retry(stdout)
         			until line =~ /Address: (.*)/
 					puts "line_2: #{line}"
-        				line = out.shift
+					line = read_nonblock_retry(stdout)
         				break unless line
         			end
 				puts "C1"
         			id = $1 if line
-        			line = out.shift
+				line = read_nonblock_retry(stdout)
         			until line =~ /RSSI: (-\d*) dBm/
-        				line = out.shift
+					line = read_nonblock_retry(stdout)
         				break unless line
         			end
 				puts "C2"
@@ -95,7 +109,10 @@ class WeightLogger
 
 		if rssi_max > -999
 			action_log_file.puts "#{Time.now.secs_of_today}\t#{id_max}\t#{rssi_max.to_s}\t#{gram}"
+			puts "#{Time.now.secs_of_today}\t#{id_max}\t#{rssi_max.to_s}\t#{gram}"
 		end
+
+		stdin.close; stdout.close
 	end
 
 	def start
@@ -109,9 +126,11 @@ class WeightLogger
 		rescue
 			puts 'File open failed'
 		end
+		stdin, stdout, wait_thr = Open3.popen2("btmon")
+
+
 		if (@state == LoggerState::DISABLED)
 			%x(hciconfig hci0 up)
-			%x(btmon&)
 			puts 'about to create the thread'
 			Thread.new do
 				@state = LoggerState::ENABLED_RUNNING
