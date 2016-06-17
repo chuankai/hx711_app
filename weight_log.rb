@@ -96,6 +96,7 @@ class WeightLogger
         				break unless line
         			end
 				puts "C2"
+				p line
         			rssi = $1.to_i if line
         		end
 			puts 'C4'
@@ -106,13 +107,18 @@ class WeightLogger
         		end
        		end
 		puts 'C3'
-
+		puts "rssi_max: #{rssi_max}"
+		puts rssi_max.class
 		if rssi_max > -999
-			action_log_file.puts "#{Time.now.secs_of_today}\t#{id_max}\t#{rssi_max.to_s}\t#{gram}"
-			puts "#{Time.now.secs_of_today}\t#{id_max}\t#{rssi_max.to_s}\t#{gram}"
+#			action_log_file.puts "#{Time.now.secs_of_today}\t#{id_max}\t#{rssi_max.to_s}\t#{gram}"
+			puts "Max RSSI: #{Time.now.secs_of_today}\t#{id_max}\t#{rssi_max.to_s}\t#{gram}"
 		end
 
-		stdin.close; stdout.close
+		puts 'Before closing'
+		stdin.close
+		stdout.close
+		exit_status = wait_thr.value
+		p 'Leave action'
 	end
 
 	def start
