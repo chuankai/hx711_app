@@ -6,6 +6,7 @@ require 'mail'
 require_relative 'calibration'
 require 'wiringpi2'
 require 'open3'
+require 'open4'
 
 module LoggerState
 	DISABLED = 1
@@ -76,6 +77,7 @@ class WeightLogger
 		rssi = -999
 		time_start = Time.now
 		stdin, stdout, wait_thr = Open3.popen2("btmon")
+		pid, = Open4.popen4("hcitool lescan&")
 
 		while (Time.now - time_start) < 18 do
         		id = ''
@@ -113,11 +115,8 @@ class WeightLogger
 #			action_log_file.puts "#{Time.now.secs_of_today}\t#{id_max}\t#{rssi_max.to_s}\t#{gram}"
 			puts "Max RSSI: #{Time.now.secs_of_today}\t#{id_max}\t#{rssi_max.to_s}\t#{gram}"
 		end
-
-		puts 'Before closing'
-		stdin.close
-		stdout.close
-		exit_status = wait_thr.value
+		%x(kill #{pid})
+		stdin.close; stdout.close
 		p 'Leave action'
 	end
 
