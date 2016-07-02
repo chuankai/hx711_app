@@ -200,7 +200,7 @@ class WeightLogger
 #					end
 					action(50)
 =======
-					if (diff > 30 && trend_count == 3)
+					if (diff > 12 && trend_count == 2)
 						trend_count = 0
 						action(diff)
 					end
