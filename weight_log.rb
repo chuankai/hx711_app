@@ -194,7 +194,7 @@ class WeightLogger
 
 					diff = queue.shift - gram
 
-					if (diff > 10 && trend_count == 3)
+					if (diff > 6 && trend_count == 2)
 						trend_count = 0
 						action(diff)
 					end
