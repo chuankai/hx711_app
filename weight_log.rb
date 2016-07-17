@@ -140,7 +140,7 @@ class WeightLogger
 			Thread.new do
 				@state = LoggerState::ENABLED_RUNNING
 
-				WATER_WEIGHT_REDUCTION_RQUIRED_IN_30_SEC = 6
+				MINIMUM_WATER_WEIGHT_REDUCTION_RQUIRED_IN_30_SEC = 6
 				WATER_WEIGHT_REDUCTION_TREND_COUNT_REQUIRED = 2
 				inputs = Array.new
 				gram = 0
@@ -196,8 +196,7 @@ class WeightLogger
 
 					diff = queue.shift - gram
 
-					if (diff > WATER_WEIGHT_REDUCTION_RQUIRED_IN_30_SEC  && trend_count >= WATER_WEIGHT_REDUCTION_TREND_COUNT_REQUIRED)
-						trend_count = 0
+					if (diff > MINIMUM_WATER_WEIGHT_REDUCTION_RQUIRED_IN_30_SEC  && trend_count >= WATER_WEIGHT_REDUCTION_TREND_COUNT_REQUIRED)
 						action(diff)
 					end
 					puts "Action done"
