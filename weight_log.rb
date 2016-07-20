@@ -24,6 +24,8 @@ class WeightLogger
 	include Singleton
 	
 	DRIVER_PIN = 0
+	MINIMUM_WATER_WEIGHT_REDUCTION_RQUIRED_IN_30_SEC = 6
+	WATER_WEIGHT_REDUCTION_TREND_COUNT_REQUIRED = 2
 
 	def initialize
 		@state = LoggerState::DISABLED
@@ -140,8 +142,6 @@ class WeightLogger
 			Thread.new do
 				@state = LoggerState::ENABLED_RUNNING
 
-				MINIMUM_WATER_WEIGHT_REDUCTION_RQUIRED_IN_30_SEC = 6
-				WATER_WEIGHT_REDUCTION_TREND_COUNT_REQUIRED = 2
 				inputs = Array.new
 				gram = 0
 				queue = Array.new()
