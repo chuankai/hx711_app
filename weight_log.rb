@@ -114,7 +114,7 @@ class WeightLogger
 		puts "rssi_max: #{rssi_max}"
 		puts rssi_max.class
 		if rssi_max > -999
-#			action_log_file.puts "#{Time.now.secs_of_today}\t#{id_max}\t#{rssi_max.to_s}\t#{gram}"
+			action_log_file.puts "#{Time.now.secs_of_today}\t#{id_max}\t#{rssi_max.to_s}\t#{gram}"
 			puts "Max RSSI: #{Time.now.secs_of_today}\t#{id_max}\t#{rssi_max.to_s}\t#{gram}"
 		end
 		%x(kill #{pid})
